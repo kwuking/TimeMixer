@@ -33,10 +33,37 @@
 ## Introduction
 TimeMixer, as a fully MLP-based architecture, taking full advantage of disentangled multiscale time series, is proposed to achieve consistent SOTA performances in both long and short-term forecasting tasks with favorable run-time efficiency.
 
-🌟 
+🌟Observation 1: History Extraction 
 <p align="center">
-<img src="./figures/motivation_1.png.png"  alt="" align=center />
+<img src="./figures/motivation1.png"  alt="" align=center />
 </p>
+
+🌟Observation 2: Future Prediction 
+<p align="center">
+<img src="./figures/motivation2.png"  alt="" align=center />
+</p>
+
+## Overall Architecture
+<p align="center">
+<img src="./figures/overall.png"  alt="" align=center />
+</p>
+
+### Past Decomposable Mixing 
+<p align="center">
+<img src="./figures/past_mixing1.png"  alt="" align=center />
+</p>
+
+<p align="center">
+<img src="./figures/past_mixing2.png"  alt="" align=center />
+</p>
+
+### Future Multipredictor Mixing 
+<p align="center">
+<img src="./figures/future_mixing.png"  alt="" align=center />
+</p>
+
+
+
 
 ## Get Started
 
