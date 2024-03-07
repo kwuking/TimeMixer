@@ -31,19 +31,27 @@
 ```
 
 ## Introduction
-TimeMixer, as a fully MLP-based architecture, taking full advantage of disentangled multiscale time series, is proposed to achieve consistent SOTA performances in both long and short-term forecasting tasks with favorable run-time efficiency.
+🏆 **TimeMixer**, as a fully MLP-based architecture, taking full advantage of disentangled multiscale time series, is proposed to **achieve consistent SOTA performances in both long and short-term forecasting tasks with favorable run-time efficiency**.
 
-🌟Observation 1: History Extraction 
+🌟**Observation 1: History Extraction** 
+
+Given that seasonal and trend components exhibit significantly different characteristics in time series, and different scales of the time series reflect different properties, with seasonal characteristics being more pronounced at a fine-grained micro scale and trend characteristics being more pronounced at a coarse macro scale, it is therefore necessary to decouple seasonal and trend components at different scales.
+
 <p align="center">
 <img src="./figures/motivation1.png"  alt="" align=center />
 </p>
 
-🌟Observation 2: Future Prediction 
+🌟**Observation 2: Future Prediction** 
+
+Integrating forecasts from different scales to obtain the final prediction results, different scales exhibit complementary predictive capabilities.
+
 <p align="center">
 <img src="./figures/motivation2.png"  alt="" align=center />
 </p>
 
 ## Overall Architecture
+TimeMixer as a fully MLP-based architecture with **Past-Decomposable-Mixing (PDM)** and **Future-Multipredictor-Mixing (FMM)** blocks to take full advantage of disentangled multiscale series in both past extraction and future prediction phases. 
+
 <p align="center">
 <img src="./figures/overall.png"  alt="" align=center />
 </p>
@@ -61,7 +69,6 @@ TimeMixer, as a fully MLP-based architecture, taking full advantage of disentang
 <p align="center">
 <img src="./figures/future_mixing.png"  alt="" align=center />
 </p>
-
 
 
 
