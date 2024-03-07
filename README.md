@@ -30,6 +30,10 @@
 }
 ```
 
+# Updates
+
+🚩: **News** (2024.02) TimeMixer has been accepted as **ICLR 2024 Poster**.
+
 ## Introduction
 🏆 **TimeMixer**, as a fully MLP-based architecture, taking full advantage of disentangled multiscale time series, is proposed to **achieve consistent SOTA performances in both long and short-term forecasting tasks with favorable run-time efficiency**.
 
@@ -96,8 +100,11 @@ bash ./scripts/short_term_forecast/PEMS/TimeMixer.sh
 
 ## Main Results
 We conduct extensive experiments to evaluate the performance and efficiency of TimeMixer, covering long-term and short-term forecasting, including 18 real-world benchmarks and 15 baselines.
+**🏆 TimeMixer achieves consistent state-of-the-art performance in all benchmarks**, covering a large variety of series with different frequencies, variate numbers and real-world scenarios.
 
 ### Long-term Forecasting
+
+To ensure model comparison fairness, experiments were performed with standardized parameters, aligning input lengths, batch sizes, and training epochs. Additionally, given that results in various studies often stem from hyperparameter optimization, we include outcomes from comprehensive parameter searches.
 
 <p align="center">
 <img src="./figures/long_results.png"  alt="" align=center />
@@ -118,8 +125,19 @@ We conduct extensive experiments to evaluate the performance and efficiency of T
 
 ## Model Abalations
 
+To verify the effectiveness of each component of TimeMixer, we provide detailed ablation study on every possible design in both Past-Decomposable-Mixing and Future-Multipredictor-Mixing blocks on all 18 experiment benchmarks （see our paper for full results 😊）.
+
+<p align="center">
+<img src="./figures/ablation.png"  alt="" align=center />
+</p>
+
 ## Model Efficiency
-TimeMixer achieves favorable efficiency in comparing with Transformer-based models.
+We compare the running memory and time against the latest state-of-the-art models under the training phase, where TimeMixer consistently demonstrates favorable efficiency, in terms of both GPU memory and running time, for various series lengths (ranging from 192 to 3072), in addition to the consistent state-of-the-art perfor- mances for both long-term and short-term forecasting tasks.
+**It is noteworthy that TimeMixer, as a deep model, demonstrates results close to those of full-linear models in terms of efficiency. This makes TimeMixer promising in a wide range of scenarios that require high model efficiency.**
+
+<p align="center">
+<img src="./figures/efficiency.png"  alt="" align=center />
+</p>
 
 ## Acknowledgement
 
