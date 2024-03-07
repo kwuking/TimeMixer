@@ -57,15 +57,21 @@ TimeMixer as a fully MLP-based architecture with **Past-Decomposable-Mixing (PDM
 </p>
 
 ### Past Decomposable Mixing 
+we propose the **Past-Decomposable-Mixing (PDM)** block to mix the decomposed seasonal and trend components in multiple scales separately. 
+
 <p align="center">
 <img src="./figures/past_mixing1.png"  alt="" align=center />
 </p>
+
+Empowered by seasonal and trend mixing, PDM progressively aggregates the detailed seasonal information from fine to coarse and dive into the macroscopic trend information with prior knowledge from coarser scales, eventually achieving the multiscale mixing in past information extraction.
 
 <p align="center">
 <img src="./figures/past_mixing2.png"  alt="" align=center />
 </p>
 
 ### Future Multipredictor Mixing 
+Note that **Future Multipredictor Mixing (FMM)** is an ensemble of multiple predictors, where different predictors are based on past information from different scales, enabling FMM to integrate complementary forecasting capabilities of mixed multiscale series.
+
 <p align="center">
 <img src="./figures/future_mixing.png"  alt="" align=center />
 </p>
@@ -87,3 +93,41 @@ bash ./scripts/long_term_forecast/Weather_script/TimeMixer.sh
 bash ./scripts/short_term_forecast/M4/TimeMixer.sh
 bash ./scripts/short_term_forecast/PEMS/TimeMixer.sh
 ```
+
+## Main Results
+We conduct extensive experiments to evaluate the performance and efficiency of TimeMixer, covering long-term and short-term forecasting, including 18 real-world benchmarks and 15 baselines.
+
+## Long-term Forecasting
+
+<p align="center">
+<img src="./figures/long_results.png"  alt="" align=center />
+</p>
+
+## Short-term Forecasting: Multivariate data
+
+<p align="center">
+<img src="./figures/pems_results.png"  alt="" align=center />
+</p>
+
+##  Short-term Forecasting: Univariate data
+
+<p align="center">
+<img src="./figures/m4_results.png"  alt="" align=center />
+</p>
+
+
+## Model Abalations
+
+## Model Efficiency
+TimeMixer achieves favorable efficiency in comparing with Transformer-based models.
+
+## Acknowledgement
+
+We appreciate the following GitHub repos a lot for their valuable code and efforts.
+- Time-Series-Library (https://github.com/thuml/Time-Series-Library)
+
+## Contact
+
+If you have any questions or want to use the code, feel free to contact:
+* Shiyu Wang (kwuking@163.com or weiming.wsy@antgroup.com)
+* Haixu Wu (wuhx23@mails.tsinghua.edu.cn)
