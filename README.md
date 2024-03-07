@@ -97,19 +97,19 @@ bash ./scripts/short_term_forecast/PEMS/TimeMixer.sh
 ## Main Results
 We conduct extensive experiments to evaluate the performance and efficiency of TimeMixer, covering long-term and short-term forecasting, including 18 real-world benchmarks and 15 baselines.
 
-## Long-term Forecasting
+### Long-term Forecasting
 
 <p align="center">
 <img src="./figures/long_results.png"  alt="" align=center />
 </p>
 
-## Short-term Forecasting: Multivariate data
+### Short-term Forecasting: Multivariate data
 
 <p align="center">
 <img src="./figures/pems_results.png"  alt="" align=center />
 </p>
 
-##  Short-term Forecasting: Univariate data
+###  Short-term Forecasting: Univariate data
 
 <p align="center">
 <img src="./figures/m4_results.png"  alt="" align=center />
