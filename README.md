@@ -143,6 +143,7 @@ We compare the running memory and time against the latest state-of-the-art model
 
 We appreciate the following GitHub repos a lot for their valuable code and efforts.
 - Time-Series-Library (https://github.com/thuml/Time-Series-Library)
+- Autoformer (https://github.com/thuml/Autoformer)
 
 ## Contact
 
