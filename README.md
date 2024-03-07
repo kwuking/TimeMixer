@@ -32,3 +32,24 @@
 
 ## Introduction
 TimeMixer, as a fully MLP-based architecture, taking full advantage of disentangled multiscale time series, is proposed to achieve consistent SOTA performances in both long and short-term forecasting tasks with favorable run-time efficiency.
+
+🌟 
+<p align="center">
+<img src="./figures/motivation_1.png.png"  alt="" align=center />
+</p>
+
+## Get Started
+
+1. Install requirements. ```pip install -r requirements.txt```
+2. Download data. You can download all the datasets from [Autoformer](https://drive.google.com/drive/folders/1ZOYpTUa82_jCcxIdTmyr0LXQfvaM9vIy). **All the datasets are well pre-processed** and can be used easily.
+3. Train the model. We provide the experiment scripts of all benchmarks under the folder `./scripts`. You can reproduce the experiment results by:
+
+```bash
+bash ./scripts/long_term_forecast/ETT_script/TimeMixer_ETTm1.sh
+bash ./scripts/long_term_forecast/ECL_script/TimeMixer.sh
+bash ./scripts/long_term_forecast/Traffic_script/TimeMixer.sh
+bash ./scripts/long_term_forecast/Solar_script/TimeMixer.sh
+bash ./scripts/long_term_forecast/Weather_script/TimeMixer.sh
+bash ./scripts/short_term_forecast/M4/TimeMixer_M4.sh
+bash ./scripts/short_term_forecast/PEMS/TimeMixer.sh
+```
