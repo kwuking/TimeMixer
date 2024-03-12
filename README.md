@@ -32,7 +32,7 @@
 
 # Updates
 
-🚩: **News** (2024.02) TimeMixer has been accepted as **ICLR 2024 Poster**.
+🚩 **News** (2024.02) TimeMixer has been accepted as **ICLR 2024 Poster**.
 
 ## Introduction
 🏆 **TimeMixer**, as a fully MLP-based architecture, taking full advantage of disentangled multiscale time series, is proposed to **achieve consistent SOTA performances in both long and short-term forecasting tasks with favorable run-time efficiency**.
