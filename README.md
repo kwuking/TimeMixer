@@ -14,6 +14,12 @@
 
 </div>
 
+<div align="center">
+
+**[<a href="https://openreview.net/pdf?id=7oLshfEIC2">Paper Page</a>]**
+
+</div>
+
 
 ---
 >
