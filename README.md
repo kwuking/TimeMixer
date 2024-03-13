@@ -145,6 +145,26 @@ We compare the running memory and time against the latest state-of-the-art model
 <img src="./figures/efficiency.png"  alt="" align=center />
 </p>
 
+## Further Reading
+1, [**Time-LLM: Time Series Forecasting by Reprogramming Large Language Models**](https://arxiv.org/abs/2310.01728), in *ICLR* 2024.
+[\[GitHub Repo\]](https://github.com/KimMeen/Time-LLM)
+
+**Authors**: Ming Jin, Shiyu Wang, Lintao Ma, Zhixuan Chu, James Y. Zhang, Xiaoming Shi, Pin-Yu Chen, Yuxuan Liang, Yuan-Fang Li, Shirui Pan, Qingsong Wen
+
+1, [**iTransformer: Inverted Transformers Are Effective for Time Series Forecasting**](https://arxiv.org/abs/2310.06625), in *ICLR* 2024 Spotlight.
+[\[GitHub Repo\]](https://github.com/thuml/iTransformer)
+
+**Authors**: Yong Liu, Tengge Hu, Haoran Zhang, Haixu Wu, Shiyu Wang, Lintao Ma, Mingsheng Long
+
+```bibtex
+@article{jin2023lm4ts,
+  title={Large Models for Time Series and Spatio-Temporal Data: A Survey and Outlook}, 
+  author={Ming Jin and Qingsong Wen and Yuxuan Liang and Chaoli Zhang and Siqiao Xue and Xue Wang and James Zhang and Yi Wang and Haifeng Chen and Xiaoli Li and Shirui Pan and Vincent S. Tseng and Yu Zheng and Lei Chen and Hui Xiong},
+  journal={arXiv preprint arXiv:2310.10196},
+  year={2023}
+}
+```
+
 ## Acknowledgement
 
 We appreciate the following GitHub repos a lot for their valuable code and efforts.
