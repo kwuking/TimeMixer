@@ -160,7 +160,7 @@ We compare the running memory and time against the latest state-of-the-art model
 }
 ```
 
-1, [**iTransformer: Inverted Transformers Are Effective for Time Series Forecasting**](https://arxiv.org/abs/2310.06625), in *ICLR* 2024 Spotlight.
+2, [**iTransformer: Inverted Transformers Are Effective for Time Series Forecasting**](https://arxiv.org/abs/2310.06625), in *ICLR* 2024 Spotlight.
 [\[GitHub Repo\]](https://github.com/thuml/iTransformer)
 
 **Authors**: Yong Liu, Tengge Hu, Haoran Zhang, Haixu Wu, Shiyu Wang, Lintao Ma, Mingsheng Long
