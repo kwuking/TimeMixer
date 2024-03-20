@@ -17,6 +17,7 @@
 <div align="center">
 
 **[<a href="https://openreview.net/pdf?id=7oLshfEIC2">Paper Page</a>]**
+**[<a href="https://zhuanlan.zhihu.com/p/686772622">中文解读1</a>]**
 
 </div>
 
