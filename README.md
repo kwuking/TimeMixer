@@ -40,7 +40,7 @@
 
 # Updates
 
-🚩 **News** (2024.03) TimeMixerhas been included in [Time-Series-Library] and achieve the consistent 🏆**state-of-the-art** in long-term time and short-term series forecasting.
+🚩 **News** (2024.03) TimeMixerhas been included in [Time-Series-Library] and achieve the consistent 🏆**state-of-the-art** in **long-term time and short-term series** forecasting.
 
 🚩 **News** (2024.03) TimeMixer has added a time-series decomposition method based on DFT, as well as downsampling operation based on 1D convolution.
 
