@@ -41,6 +41,7 @@
 # Updates
 
 🚩 **News** (2024.03) TimeMixer has added a time-series decomposition method based on DFT, as well as downsampling operation based on 1D convolution.
+
 🚩 **News** (2024.02) TimeMixer has been accepted as **ICLR 2024 Poster**.
 
 ## Introduction
