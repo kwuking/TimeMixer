@@ -89,15 +89,11 @@ class Exp_Short_Term_Forecast(Exp_Basic):
 
                 batch_y_mark = batch_y_mark.float().to(self.device)
 
-                batch_x = self.__multi_scale_process_inputs(batch_x)
-
                 dec_inp = torch.zeros_like(batch_y[:, -self.args.pred_len:, :]).float()
                 dec_inp = torch.cat([batch_y[:, :self.args.label_len, :], dec_inp], dim=1).float().to(self.device)
 
                 outputs = self.model(batch_x, None, dec_inp, None)
                 f_dim = -1 if self.args.features == 'MS' else 0
-                batch_y, outputs = self.__process_outputs(batch_y, f_dim, outputs)
-
 
                 batch_y_mark = batch_y_mark[:, -self.args.pred_len:, f_dim:].to(self.device)
                 loss_value = criterion(batch_x, self.args.frequency_map, outputs, batch_y, batch_y_mark)
@@ -160,7 +156,6 @@ class Exp_Short_Term_Forecast(Exp_Basic):
             id_list = np.append(id_list, B)
             for i in range(len(id_list) - 1):
                 x_enc = x[id_list[i]:id_list[i + 1]]
-                x_enc = self.__multi_scale_process_inputs(x_enc)
                 outputs[id_list[i]:id_list[i + 1], :, :] = self.model(x_enc, None,
                                                                       dec_inp[id_list[i]:id_list[i + 1]],
                                                                       None).detach().cpu()
@@ -202,7 +197,6 @@ class Exp_Short_Term_Forecast(Exp_Basic):
             id_list = np.append(id_list, B)
             for i in range(len(id_list) - 1):
                 x_enc = x[id_list[i]:id_list[i + 1]]
-                x_enc = self.__multi_scale_process_inputs(x_enc)
                 outputs[id_list[i]:id_list[i + 1], :, :] = self.model(x_enc, None,
                                                                       dec_inp[id_list[i]:id_list[i + 1]], None)
 
@@ -255,48 +249,3 @@ class Exp_Short_Term_Forecast(Exp_Basic):
             print('After all 6 tasks are finished, you can calculate the averaged index')
         return
 
-    def __multi_scale_process_inputs(self, batch_x):
-        if self.args.down_sampling_method == 'max':
-            down_pool = torch.nn.MaxPool1d(self.args.down_sampling_window, return_indices=False)
-
-        elif self.args.down_sampling_method == 'avg':
-            down_pool = torch.nn.AvgPool1d(self.args.down_sampling_window)
-        else:
-            return batch_x
-        # B,T,C -> B,C,T
-        batch_x = batch_x.permute(0, 2, 1)
-        batch_x_ori = batch_x
-        batch_x_sampling_list = []
-        batch_x_sampling_list.append(batch_x.permute(0, 2, 1))
-
-
-        for i in range(self.args.down_sampling_layers):
-            batch_x_sampling = down_pool(batch_x_ori)
-            batch_x_ori = batch_x_sampling
-            batch_x_sampling_list.append(batch_x_sampling.permute(0, 2, 1))
-
-
-        if self.args.only_use_down_sampling and self.args.down_sampling_layers == 1:
-            return batch_x_sampling.permute(0, 2, 1)
-        # B,C,T -> B,T,C
-        if self.args.down_sampling_layers == 1 and self.args.pred_down_sampling:
-            batch_x = [batch_x.permute(0, 2, 1), batch_x_sampling.permute(0, 2, 1)]
-        else:
-            batch_x = batch_x_sampling_list
-
-        return batch_x
-
-    def __process_outputs(self, batch_y, f_dim, outputs):
-        if self.args.down_sampling_method and self.args.pred_down_sampling and self.args.down_sampling_layers == 1:
-            batch_y, outputs = self.__do_process_outputs(batch_y, f_dim, outputs)
-
-        else:
-            outputs = outputs[:, -self.args.pred_len:, f_dim:]
-            batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
-        return batch_y, outputs
-
-    def __do_process_outputs(self, batch_y, f_dim, outputs):
-        outputs = outputs[:, -(self.args.pred_len) // self.args.down_sampling_window:, f_dim:]
-        batch_y = batch_y[:, -(self.args.pred_len) // self.args.down_sampling_window:, f_dim:].to(
-            self.device)
-        return batch_y, outputs

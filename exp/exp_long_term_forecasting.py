@@ -1,4 +1,3 @@
-from matplotlib import pyplot as plt
 from torch.optim import lr_scheduler
 
 from data_provider.data_factory import data_provider
@@ -53,9 +52,6 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 batch_x_mark = batch_x_mark.float().to(self.device)
                 batch_y_mark = batch_y_mark.float().to(self.device)
 
-                batch_x, batch_x_mark, batch_y, batch_y_mark = self.__multi_scale_process_inputs(batch_x, batch_x_mark,
-                                                                                                 batch_y,
-                                                                                                 batch_y_mark)
                 if 'PEMS' == self.args.data or 'Solar' == self.args.data:
                     batch_x_mark = None
                     batch_y_mark = None
@@ -79,14 +75,9 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                     else:
                         outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
                 f_dim = -1 if self.args.features == 'MS' else 0
-                batch_y, outputs = self.__process_outputs(batch_y, f_dim, outputs)
 
-                if isinstance(batch_y, list) and isinstance(outputs, list):
-                    pred = outputs[0].detach()
-                    true = batch_y[0].detach()
-                else:
-                    pred = outputs.detach()
-                    true = batch_y.detach()
+                pred = outputs.detach()
+                true = batch_y.detach()
 
                 if self.args.data == 'PEMS':
                     B, T, C = pred.shape
@@ -148,10 +139,6 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 batch_x_mark = batch_x_mark.float().to(self.device)
                 batch_y_mark = batch_y_mark.float().to(self.device)
 
-                batch_x, batch_x_mark, batch_y, batch_y_mark = self.__multi_scale_process_inputs(batch_x, batch_x_mark,
-                                                                                                 batch_y,
-                                                                                                 batch_y_mark)
-
                 if 'PEMS' == self.args.data or 'Solar' == self.args.data:
                     batch_x_mark = None
                     batch_y_mark = None
@@ -182,9 +169,8 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                         outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
 
                     f_dim = -1 if self.args.features == 'MS' else 0
-                    batch_y, outputs = self.__process_outputs(batch_y, f_dim, outputs)
 
-                    loss = self.do_criterion(batch_y, criterion, outputs)
+                    loss = criterion(outputs, batch_y)
                     train_loss.append(loss.item())
 
                 if (i + 1) % 100 == 0:
@@ -229,17 +215,6 @@ class Exp_Long_Term_Forecast(Exp_Basic):
 
         return self.model
 
-    def do_criterion(self, batch_y, criterion, outputs):
-        if isinstance(batch_y, list) and isinstance(outputs, list):
-            loss_list = []
-            for batch_y, output in zip(batch_y, outputs):
-                loss = criterion(output, batch_y)
-                loss_list.append(loss)
-            loss = sum(loss_list) / len(loss_list)
-        else:
-            loss = criterion(outputs, batch_y)
-        return loss
-
     def test(self, setting, test=0):
         test_data, test_loader = self._get_data(flag='test')
         if test:
@@ -262,9 +237,6 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 batch_x_mark = batch_x_mark.float().to(self.device)
                 batch_y_mark = batch_y_mark.float().to(self.device)
 
-                batch_x, batch_x_mark, batch_y, batch_y_mark = self.__multi_scale_process_inputs(batch_x, batch_x_mark,
-                                                                                                 batch_y,
-                                                                                                 batch_y_mark)
                 if 'PEMS' == self.args.data or 'Solar' == self.args.data:
                     batch_x_mark = None
                     batch_y_mark = None
@@ -290,13 +262,9 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                         outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
 
                 f_dim = -1 if self.args.features == 'MS' else 0
-                batch_y, outputs = self.__process_outputs(batch_y, f_dim, outputs)
-                if isinstance(batch_y, list) and isinstance(outputs, list):
-                    outputs = outputs[0].detach().cpu().numpy()
-                    batch_y = batch_y[0].detach().cpu().numpy()
-                else:
-                    outputs = outputs.detach().cpu().numpy()
-                    batch_y = batch_y.detach().cpu().numpy()
+
+                outputs = outputs.detach().cpu().numpy()
+                batch_y = batch_y.detach().cpu().numpy()
 
                 pred = outputs
                 true = batch_y
@@ -304,24 +272,13 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 preds.append(pred)
                 trues.append(true)
                 if i % 20 == 0:
-                    if self.args.down_sampling_method and self.args.only_use_down_sampling == False and self.args.pred_down_sampling:
-                        input = batch_x[-1].detach().cpu().numpy()
-                        gt = np.concatenate((input[0, :, -1], true[0, :, -1]), axis=0)
-                        pd = np.concatenate((input[0, :, -1], pred[0, :, -1]), axis=0)
-                        visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
-                        save_to_csv(gt, pd, os.path.join(folder_path, str(i) + '.csv'))
-                    elif self.args.down_sampling_method and self.args.only_use_down_sampling == False and self.args.pred_down_sampling == False:
-                        input = batch_x[0].detach().cpu().numpy()
-                        gt = np.concatenate((input[0, :, -1], true[0, :, -1]), axis=0)
-                        pd = np.concatenate((input[0, :, -1], pred[0, :, -1]), axis=0)
-                        visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
-                        save_to_csv(gt, pd, os.path.join(folder_path, str(i) + '.csv'))
-                    else:
-                        input = batch_x.detach().cpu().numpy()
-                        gt = np.concatenate((input[0, :, -1], true[0, :, -1]), axis=0)
-                        pd = np.concatenate((input[0, :, -1], pred[0, :, -1]), axis=0)
-                        visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
-                        save_to_csv(gt, pd, os.path.join(folder_path, str(i) + '.csv'))
+                    input = batch_x.detach().cpu().numpy()
+                    if test_data.scale and self.args.inverse:
+                        shape = input.shape
+                        input = test_data.inverse_transform(input.squeeze(0)).reshape(shape)
+                    gt = np.concatenate((input[0, :, -1], true[0, :, -1]), axis=0)
+                    pd = np.concatenate((input[0, :, -1], pred[0, :, -1]), axis=0)
+                    visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
 
         preds = np.array(preds)
         trues = np.array(trues)
@@ -358,76 +315,3 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         np.save(folder_path + 'pred.npy', preds)
         np.save(folder_path + 'true.npy', trues)
         return
-
-    def __multi_scale_process_inputs(self, batch_x, batch_x_mark, batch_y, batch_y_mark):
-        if self.args.down_sampling_method == 'max':
-            down_pool = torch.nn.MaxPool1d(self.args.down_sampling_window, return_indices=False)
-
-        elif self.args.down_sampling_method == 'avg':
-            down_pool = torch.nn.AvgPool1d(self.args.down_sampling_window)
-        else:
-            return batch_x, batch_x_mark, batch_y, batch_y_mark
-        # B,T,C -> B,C,T
-        batch_x = batch_x.permute(0, 2, 1)
-        batch_y = batch_y.permute(0, 2, 1)
-
-        batch_x_ori = batch_x
-        batch_y_ori = batch_y
-        batch_x_mark_ori = batch_x_mark
-        batch_y_mark_ori = batch_y_mark
-
-        batch_x_sampling_list = []
-        batch_y_sampling_list = []
-        batch_x_mark_list = []
-        batch_y_mark_list = []
-        batch_x_sampling_list.append(batch_x.permute(0, 2, 1))
-        batch_y_sampling_list.append(batch_y.permute(0, 2, 1))
-        batch_x_mark_list.append(batch_x_mark)
-        batch_y_mark_list.append(batch_y_mark)
-
-        for i in range(self.args.down_sampling_layers):
-            batch_x_sampling = down_pool(batch_x_ori)
-            batch_y_sampling = batch_y_ori
-
-            batch_x_sampling_list.append(batch_x_sampling.permute(0, 2, 1))
-            batch_y_sampling_list.append(batch_y_sampling.permute(0, 2, 1))
-
-            batch_x_mark_list.append(batch_x_mark_ori[:, ::self.args.down_sampling_window, :])
-            batch_y_mark_list.append(batch_y_mark_ori)
-
-            batch_x_ori = batch_x_sampling
-            batch_y_ori = batch_y_sampling
-
-            batch_x_mark_ori = batch_x_mark_ori[:, ::self.args.down_sampling_window, :]
-            batch_y_mark_ori = batch_y_mark_ori
-
-        if self.args.only_use_down_sampling and self.args.down_sampling_layers == 1:
-            return batch_x_sampling.permute(0, 2, 1), batch_x_mark[:, ::self.args.down_sampling_window, :], \
-                batch_y_sampling.permute(0, 2, 1), batch_y_mark[:, ::self.args.down_sampling_window, :]
-        # B,C,T -> B,T,C
-        if self.args.down_sampling_layers == 1 and self.args.pred_down_sampling:
-            batch_x = [batch_x.permute(0, 2, 1), batch_x_sampling.permute(0, 2, 1)]
-            batch_y = batch_y_sampling.permute(0, 2, 1)
-            batch_x_mark = [batch_x_mark, batch_x_mark[:, ::self.args.down_sampling_window, :]]
-            batch_y_mark = [batch_y_mark, batch_y_mark[:, ::self.args.down_sampling_window, :]]
-        else:
-            batch_x = batch_x_sampling_list
-            batch_y = batch_y.permute(0, 2, 1)
-            batch_x_mark = batch_x_mark_list
-            batch_y_mark = batch_y_mark
-
-        return batch_x, batch_x_mark, batch_y, batch_y_mark
-
-    def __process_outputs(self, batch_y, f_dim, outputs):
-        if self.args.down_sampling_method and self.args.pred_down_sampling and self.args.down_sampling_layers == 1:
-            batch_y, outputs = self.__do_process_outputs(batch_y, f_dim, outputs)
-        else:
-            outputs = outputs[:, -self.args.pred_len:, f_dim:]
-            batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
-        return batch_y, outputs
-
-    def __do_process_outputs(self, batch_y, f_dim, outputs):
-        outputs = outputs[:, -(self.args.pred_len) // self.args.down_sampling_window:, f_dim:]
-        batch_y = batch_y[:, -(self.args.pred_len) // self.args.down_sampling_window:, f_dim:].to(
-            self.device)
-        return batch_y, outputs

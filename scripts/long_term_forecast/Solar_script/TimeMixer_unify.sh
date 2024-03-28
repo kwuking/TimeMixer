@@ -35,7 +35,7 @@ python -u run.py \
   --use_norm 0 \
   --d_model 512 \
   --d_ff 2048 \
-  --channel_independent 0 \
+  --channel_independence 0 \
   --batch_size $batch_size \
   --learning_rate $learning_rate \
   --train_epochs $train_epochs \
@@ -66,7 +66,7 @@ python -u run.py \
   --use_norm 0 \
   --d_model 512 \
   --d_ff 2048 \
-  --channel_independent 0 \
+  --channel_independence 0 \
   --batch_size $batch_size \
   --learning_rate $learning_rate \
   --train_epochs $train_epochs \
@@ -98,7 +98,7 @@ python -u run.py \
   --use_norm 0 \
   --d_model 512 \
   --d_ff 2048 \
-  --channel_independent 0 \
+  --channel_independence 0 \
   --batch_size $batch_size \
   --learning_rate $learning_rate \
   --train_epochs $train_epochs \
@@ -130,7 +130,7 @@ python -u run.py \
   --use_norm 0 \
   --d_model 512 \
   --d_ff 2048 \
-  --channel_independent 0 \
+  --channel_independence 0 \
   --batch_size $batch_size \
   --learning_rate $learning_rate \
   --train_epochs $train_epochs \

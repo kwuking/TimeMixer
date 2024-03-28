@@ -36,6 +36,7 @@ parser.add_argument('--seq_len', type=int, default=96, help='input sequence leng
 parser.add_argument('--label_len', type=int, default=48, help='start token length')
 parser.add_argument('--pred_len', type=int, default=96, help='prediction sequence length')
 parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
+parser.add_argument('--inverse', action='store_true', help='inverse output data', default=False)
 
 # model define
 parser.add_argument('--top_k', type=int, default=5, help='for TimesBlock')
@@ -58,17 +59,15 @@ parser.add_argument('--embed', type=str, default='timeF',
                     help='time features encoding, options:[timeF, fixed, learned]')
 parser.add_argument('--activation', type=str, default='gelu', help='activation')
 parser.add_argument('--output_attention', action='store_true', help='whether to output attention in ecoder')
-parser.add_argument('--individual', type=bool, default=False, help='whether to channel individual')
-parser.add_argument('--channel_independent', type=int, default=1, help='whether to channel independent; True 1 False 0')
+parser.add_argument('--channel_independence', type=int, default=1,
+                    help='0: channel dependence 1: channel independence for FreTS model')
+parser.add_argument('--decomp_method', type=str, default='moving_avg',
+                    help='method of series decompsition, only support moving_avg or dft_decomp')
 parser.add_argument('--use_norm', type=int, default=1, help='whether to use normalize; True 1 False 0')
-parser.add_argument('--use_graph', type=int, default=0, help='whether to use graph structure; True 1 False 0')
-
-# down_sampling
-parser.add_argument('--only_use_down_sampling', type=bool, default=False, help='only use down sampling')
-parser.add_argument('--pred_down_sampling', type=bool, default=False, help='whether to down sampling in pred seq')
 parser.add_argument('--down_sampling_layers', type=int, default=0, help='num of down sampling layers')
 parser.add_argument('--down_sampling_window', type=int, default=1, help='down sampling window size')
-parser.add_argument('--down_sampling_method', type=str, default=None, help='down sampling method')
+parser.add_argument('--down_sampling_method', type=str, default='avg',
+                    help='down sampling method, only support avg, max, conv')
 
 # optimization
 parser.add_argument('--num_workers', type=int, default=10, help='data loader num workers')
@@ -106,7 +105,6 @@ if args.use_gpu and args.use_multi_gpu:
 
 print('Args in experiment:')
 print(args)
-
 
 if args.task_name == 'long_term_forecast':
     Exp = Exp_Long_Term_Forecast
