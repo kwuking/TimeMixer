@@ -300,15 +300,17 @@ class Model(nn.Module):
             x_enc_sampling = down_pool(x_enc_ori)
 
             x_enc_sampling_list.append(x_enc_sampling.permute(0, 2, 1))
-
-            x_mark_sampling_list.append(x_mark_enc_mark_ori[:, ::self.configs.down_sampling_window, :])
-
             x_enc_ori = x_enc_sampling
 
-            x_mark_enc_mark_ori = x_mark_enc_mark_ori[:, ::self.configs.down_sampling_window, :]
+            if x_mark_enc_mark_ori is not None:
+                x_mark_sampling_list.append(x_mark_enc_mark_ori[:, ::self.configs.down_sampling_window, :])
+                x_mark_enc_mark_ori = x_mark_enc_mark_ori[:, ::self.configs.down_sampling_window, :]
 
         x_enc = x_enc_sampling_list
-        x_mark_enc = x_mark_sampling_list
+        if x_mark_enc_mark_ori is not None:
+            x_mark_enc = x_mark_sampling_list
+        else:
+            x_mark_enc = x_mark_enc
 
         return x_enc, x_mark_enc
 
