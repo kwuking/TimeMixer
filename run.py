@@ -68,6 +68,8 @@ parser.add_argument('--down_sampling_layers', type=int, default=0, help='num of 
 parser.add_argument('--down_sampling_window', type=int, default=1, help='down sampling window size')
 parser.add_argument('--down_sampling_method', type=str, default='avg',
                     help='down sampling method, only support avg, max, conv')
+parser.add_argument('--use_future_temporal_feature', type=int, default=0,
+                    help='whether to use future_temporal_feature; True 1 False 0')
 
 # optimization
 parser.add_argument('--num_workers', type=int, default=10, help='data loader num workers')
