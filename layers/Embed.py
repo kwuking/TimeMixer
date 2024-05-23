@@ -135,7 +135,6 @@ class DataEmbedding(nn.Module):
         return self.dropout(x)
 
 
-
 class DataEmbedding_ms(nn.Module):
     def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1):
         super(DataEmbedding_ms, self).__init__()
@@ -170,11 +169,14 @@ class DataEmbedding_wo_pos(nn.Module):
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x, x_mark):
+        if x is None and x_mark is not None:
+            return self.temporal_embedding(x_mark)
         if x_mark is None:
             x = self.value_embedding(x)
         else:
             x = self.value_embedding(x) + self.temporal_embedding(x_mark)
         return self.dropout(x)
+
 
 class PatchEmbedding_crossformer(nn.Module):
     def __init__(self, d_model, patch_len, stride, padding, dropout):
@@ -202,6 +204,7 @@ class PatchEmbedding_crossformer(nn.Module):
         # Input encoding
         x = self.value_embedding(x) + self.position_embedding(x)
         return self.dropout(x), n_vars
+
 
 class PatchEmbedding(nn.Module):
     def __init__(self, d_model, patch_len, stride, dropout):
