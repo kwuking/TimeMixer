@@ -40,7 +40,9 @@
 
 # Updates
 
-🚩 **News** (2024.03) TimeMixerhas been included in [[Time-Series-Library]](https://github.com/thuml/Time-Series-Library) and achieve the consistent 🏆**state-of-the-art** in **long-term time and short-term series** forecasting.
+🚩 **News** (2024.05) TimeMixer currently supports using future temporal features for prediction. This feature has been well-received by the community members. You can now decide whether to enable this feature by using the parameter use_future_temporal_feature.
+
+🚩 **News** (2024.03) TimeMixer has been included in [[Time-Series-Library]](https://github.com/thuml/Time-Series-Library) and achieve the consistent 🏆**state-of-the-art** in **long-term time and short-term series** forecasting.
 
 🚩 **News** (2024.03) TimeMixer has added a time-series decomposition method based on DFT, as well as downsampling operation based on 1D convolution.
 
