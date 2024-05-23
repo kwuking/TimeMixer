@@ -199,6 +199,7 @@ class Model(nn.Module):
 
         self.preprocess = series_decomp(configs.moving_avg)
         self.enc_in = configs.enc_in
+        self.use_future_temporal_feature = configs.use_future_temporal_feature
 
         if self.channel_independence == 1:
             self.enc_embedding = DataEmbedding_wo_pos(1, configs.d_model, configs.embed, configs.freq,
@@ -208,21 +209,6 @@ class Model(nn.Module):
                                                       configs.dropout)
 
         self.layer = configs.e_layers
-
-        if self.configs.down_sampling_method == 'max':
-            self.down_pool = torch.nn.MaxPool1d(self.configs.down_sampling_window, return_indices=False)
-        elif self.configs.down_sampling_method == 'avg':
-            self.down_pool = torch.nn.AvgPool1d(self.configs.down_sampling_window)
-        elif self.configs.down_sampling_method == 'conv':
-            padding = 1 if torch.__version__ >= '1.5.0' else 2
-            self.down_pool = nn.Conv1d(in_channels=self.configs.enc_in, out_channels=self.configs.enc_in,
-                                       kernel_size=3, padding=padding,
-                                       stride=self.configs.down_sampling_window,
-                                       padding_mode='circular',
-                                       bias=False)
-        else:
-            raise ValueError('Downsampling method is error,only supporting the max, avg, conv1D')
-        
         if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
             self.predict_layers = torch.nn.ModuleList(
                 [
@@ -287,6 +273,19 @@ class Model(nn.Module):
             return (out1_list, out2_list)
 
     def __multi_scale_process_inputs(self, x_enc, x_mark_enc):
+        if self.configs.down_sampling_method == 'max':
+            down_pool = torch.nn.MaxPool1d(self.configs.down_sampling_window, return_indices=False)
+        elif self.configs.down_sampling_method == 'avg':
+            down_pool = torch.nn.AvgPool1d(self.configs.down_sampling_window)
+        elif self.configs.down_sampling_method == 'conv':
+            padding = 1 if torch.__version__ >= '1.5.0' else 2
+            down_pool = nn.Conv1d(in_channels=self.configs.enc_in, out_channels=self.configs.enc_in,
+                                  kernel_size=3, padding=padding,
+                                  stride=self.configs.down_sampling_window,
+                                  padding_mode='circular',
+                                  bias=False)
+        else:
+            return x_enc, x_mark_enc
         # B,T,C -> B,C,T
         x_enc = x_enc.permute(0, 2, 1)
 
@@ -299,7 +298,7 @@ class Model(nn.Module):
         x_mark_sampling_list.append(x_mark_enc)
 
         for i in range(self.configs.down_sampling_layers):
-            x_enc_sampling = self.down_pool(x_enc_ori)
+            x_enc_sampling = down_pool(x_enc_ori)
 
             x_enc_sampling_list.append(x_enc_sampling.permute(0, 2, 1))
             x_enc_ori = x_enc_sampling
@@ -318,6 +317,14 @@ class Model(nn.Module):
 
     def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec):
 
+        if self.use_future_temporal_feature:
+            if self.channel_independence == 1:
+                B, T, N = x_enc.size()
+                x_mark_dec = x_mark_dec.repeat(N, 1, 1)
+                self.x_mark_dec = self.enc_embedding(None, x_mark_dec)
+            else:
+                self.x_mark_dec = self.enc_embedding(None, x_mark_dec)
+
         x_enc, x_mark_enc = self.__multi_scale_process_inputs(x_enc, x_mark_enc)
 
         x_list = []
@@ -328,8 +335,8 @@ class Model(nn.Module):
                 x = self.normalize_layers[i](x, 'norm')
                 if self.channel_independence == 1:
                     x = x.permute(0, 2, 1).contiguous().reshape(B * N, T, 1)
+                    x_mark = x_mark.repeat(N, 1, 1)
                 x_list.append(x)
-                x_mark = x_mark.repeat(N, 1, 1)
                 x_mark_list.append(x_mark)
         else:
             for i, x in zip(range(len(x_enc)), x_enc, ):
@@ -369,7 +376,11 @@ class Model(nn.Module):
             for i, enc_out in zip(range(len(x_list)), enc_out_list):
                 dec_out = self.predict_layers[i](enc_out.permute(0, 2, 1)).permute(
                     0, 2, 1)  # align temporal dimension
-                dec_out = self.projection_layer(dec_out)
+                if self.use_future_temporal_feature:
+                    dec_out = dec_out + self.x_mark_dec
+                    dec_out = self.projection_layer(dec_out)
+                else:
+                    dec_out = self.projection_layer(dec_out)
                 dec_out = dec_out.reshape(B, self.configs.c_out, self.pred_len).permute(0, 2, 1).contiguous()
                 dec_out_list.append(dec_out)
 
