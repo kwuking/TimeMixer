@@ -4,11 +4,12 @@ import pandas as pd
 import glob
 import re
 import torch
+from sktime.datasets import load_from_tsfile_to_dataframe
 from torch.utils.data import Dataset
 from sklearn.preprocessing import StandardScaler
 from utils.timefeatures import time_features
 from data_provider.m4 import M4Dataset, M4Meta
-from data_provider.uea import Normalizer
+from data_provider.uea import Normalizer, interpolate_missing
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -658,6 +659,42 @@ class UEAloader(Dataset):
         all_df, labels_df = self.load_single(input_paths[0])  # a single file contains dataset
 
         return all_df, labels_df
+
+    def load_single(self, filepath):
+        df, labels = load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True,
+                                                   replace_missing_vals_with='NaN')
+        labels = pd.Series(labels, dtype="category")
+        self.class_names = labels.cat.categories
+        labels_df = pd.DataFrame(labels.cat.codes,
+                                 dtype=np.int8)  # int8-32 gives an error when using nn.CrossEntropyLoss
+
+        lengths = df.applymap(
+            lambda x: len(x)).values  # (num_samples, num_dimensions) array containing the length of each series
+
+        horiz_diffs = np.abs(lengths - np.expand_dims(lengths[:, 0], -1))
+
+        if np.sum(horiz_diffs) > 0:  # if any row (sample) has varying length across dimensions
+            df = df.applymap(subsample)
+
+        lengths = df.applymap(lambda x: len(x)).values
+        vert_diffs = np.abs(lengths - np.expand_dims(lengths[0, :], 0))
+        if np.sum(vert_diffs) > 0:  # if any column (dimension) has varying length across samples
+            self.max_seq_len = int(np.max(lengths[:, 0]))
+        else:
+            self.max_seq_len = lengths[0, 0]
+
+        # First create a (seq_len, feat_dim) dataframe for each sample, indexed by a single integer ("ID" of the sample)
+        # Then concatenate into a (num_samples * seq_len, feat_dim) dataframe, with multiple rows corresponding to the
+        # sample index (i.e. the same scheme as all datasets in this project)
+
+        df = pd.concat((pd.DataFrame({col: df.loc[row, col] for col in df.columns}).reset_index(drop=True).set_index(
+            pd.Series(lengths[row, 0] * [row])) for row in range(df.shape[0])), axis=0)
+
+        # Replace NaN values
+        grp = df.groupby(by=df.index)
+        df = grp.transform(interpolate_missing)
+
+        return df, labels_df
 
     def instance_norm(self, case):
         if self.root_path.count('EthanolConcentration') > 0:  # special process for numerical stability
