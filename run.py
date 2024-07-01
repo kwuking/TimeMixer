@@ -1,5 +1,9 @@
 import argparse
 import torch
+
+from exp.exp_anomaly_detection import Exp_Anomaly_Detection
+from exp.exp_classification import Exp_Classification
+from exp.exp_imputation import Exp_Imputation
 from exp.exp_long_term_forecasting import Exp_Long_Term_Forecast
 from exp.exp_short_term_forecasting import Exp_Short_Term_Forecast
 import random
@@ -10,7 +14,7 @@ random.seed(fix_seed)
 torch.manual_seed(fix_seed)
 np.random.seed(fix_seed)
 
-parser = argparse.ArgumentParser(description='TimesNet')
+parser = argparse.ArgumentParser(description='TimeMixer')
 
 # basic config
 parser.add_argument('--task_name', type=str, required=True, default='long_term_forecast',
@@ -71,6 +75,12 @@ parser.add_argument('--down_sampling_method', type=str, default='avg',
 parser.add_argument('--use_future_temporal_feature', type=int, default=0,
                     help='whether to use future_temporal_feature; True 1 False 0')
 
+# imputation task
+parser.add_argument('--mask_rate', type=float, default=0.25, help='mask ratio')
+
+# anomaly detection task
+parser.add_argument('--anomaly_ratio', type=float, default=0.25, help='prior anomaly ratio (%)')
+
 # optimization
 parser.add_argument('--num_workers', type=int, default=10, help='data loader num workers')
 parser.add_argument('--itr', type=int, default=1, help='experiments times')
@@ -112,6 +122,12 @@ if args.task_name == 'long_term_forecast':
     Exp = Exp_Long_Term_Forecast
 elif args.task_name == 'short_term_forecast':
     Exp = Exp_Short_Term_Forecast
+elif args.task_name == 'imputation':
+    Exp = Exp_Imputation
+elif args.task_name == 'anomaly_detection':
+    Exp = Exp_Anomaly_Detection
+elif args.task_name == 'classification':
+    Exp = Exp_Classification
 else:
     Exp = Exp_Long_Term_Forecast
 
