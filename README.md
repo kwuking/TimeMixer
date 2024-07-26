@@ -42,6 +42,8 @@
 
 # Updates
 
+🚩 **News** (2024。07): TimeMixer has been included in **[NeuralForecast](https://github.com/Nixtla/neuralforecast)**. Special thanks to the contributor @[marcopeix](https://github.com/marcopeix) and @[JQGoh](https://github.com/JQGoh)!
+
 🚩 **News** (2024.07) TimeMixer has evolved into a **large model supporting comprehensive time series analysis, including long-term forecasting, short-term forecasting, anomaly detection, imputation, and classification**. In the future, we will further explore additional types of time series analysis tasks and strive to break through the limitations of current long-term forecasting to achieve efficient extreme-long-term time series forecasting.
 
 🚩 **News** (2024.06) **Introduction of TimeMixer** in [Chinese](https://mp.weixin.qq.com/s/d7fEnEpnyW5T8BN08XRi7g) is available.
