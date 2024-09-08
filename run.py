@@ -106,34 +106,62 @@ parser.add_argument('--p_hidden_dims', type=int, nargs='+', default=[128, 128],
                     help='hidden layer dimensions of projector (List)')
 parser.add_argument('--p_hidden_layers', type=int, default=2, help='number of hidden layers in projector')
 
-args = parser.parse_args()
-args.use_gpu = True if torch.cuda.is_available() and args.use_gpu else False
+if __name__ == '__main__':
+    args = parser.parse_args()
+    args.use_gpu = True if torch.cuda.is_available() and args.use_gpu else False
 
-if args.use_gpu and args.use_multi_gpu:
-    args.devices = args.devices.replace(' ', '')
-    device_ids = args.devices.split(',')
-    args.device_ids = [int(id_) for id_ in device_ids]
-    args.gpu = args.device_ids[0]
+    if args.use_gpu and args.use_multi_gpu:
+        args.devices = args.devices.replace(' ', '')
+        device_ids = args.devices.split(',')
+        args.device_ids = [int(id_) for id_ in device_ids]
+        args.gpu = args.device_ids[0]
 
-print('Args in experiment:')
-print(args)
+    print('Args in experiment:')
+    print(args)
 
-if args.task_name == 'long_term_forecast':
-    Exp = Exp_Long_Term_Forecast
-elif args.task_name == 'short_term_forecast':
-    Exp = Exp_Short_Term_Forecast
-elif args.task_name == 'imputation':
-    Exp = Exp_Imputation
-elif args.task_name == 'anomaly_detection':
-    Exp = Exp_Anomaly_Detection
-elif args.task_name == 'classification':
-    Exp = Exp_Classification
-else:
-    Exp = Exp_Long_Term_Forecast
+    if args.task_name == 'long_term_forecast':
+        Exp = Exp_Long_Term_Forecast
+    elif args.task_name == 'short_term_forecast':
+        Exp = Exp_Short_Term_Forecast
+    elif args.task_name == 'imputation':
+        Exp = Exp_Imputation
+    elif args.task_name == 'anomaly_detection':
+        Exp = Exp_Anomaly_Detection
+    elif args.task_name == 'classification':
+        Exp = Exp_Classification
+    else:
+        Exp = Exp_Long_Term_Forecast
 
-if args.is_training:
-    for ii in range(args.itr):
-        # setting record of experiments
+    if args.is_training:
+        for ii in range(args.itr):
+            # setting record of experiments
+            setting = '{}_{}_{}_{}_{}_sl{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_fc{}_eb{}_dt{}_{}_{}'.format(
+                args.task_name,
+                args.model_id,
+                args.comment,
+                args.model,
+                args.data,
+                args.seq_len,
+                args.pred_len,
+                args.d_model,
+                args.n_heads,
+                args.e_layers,
+                args.d_layers,
+                args.d_ff,
+                args.factor,
+                args.embed,
+                args.distil,
+                args.des, ii)
+
+            exp = Exp(args)  # set experiments
+            print('>>>>>>>start training : {}>>>>>>>>>>>>>>>>>>>>>>>>>>'.format(setting))
+            exp.train(setting)
+
+            print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
+            exp.test(setting)
+            torch.cuda.empty_cache()
+    else:
+        ii = 0
         setting = '{}_{}_{}_{}_{}_sl{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_fc{}_eb{}_dt{}_{}_{}'.format(
             args.task_name,
             args.model_id,
@@ -153,33 +181,6 @@ if args.is_training:
             args.des, ii)
 
         exp = Exp(args)  # set experiments
-        print('>>>>>>>start training : {}>>>>>>>>>>>>>>>>>>>>>>>>>>'.format(setting))
-        exp.train(setting)
-
         print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
-        exp.test(setting)
+        exp.test(setting, test=1)
         torch.cuda.empty_cache()
-else:
-    ii = 0
-    setting = '{}_{}_{}_{}_{}_sl{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_fc{}_eb{}_dt{}_{}_{}'.format(
-        args.task_name,
-        args.model_id,
-        args.comment,
-        args.model,
-        args.data,
-        args.seq_len,
-        args.pred_len,
-        args.d_model,
-        args.n_heads,
-        args.e_layers,
-        args.d_layers,
-        args.d_ff,
-        args.factor,
-        args.embed,
-        args.distil,
-        args.des, ii)
-
-    exp = Exp(args)  # set experiments
-    print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
-    exp.test(setting, test=1)
-    torch.cuda.empty_cache()
