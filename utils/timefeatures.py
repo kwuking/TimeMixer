@@ -17,6 +17,14 @@ class TimeFeature:
         return self.__class__.__name__ + "()"
 
 
+class MillisecondOfMinute(TimeFeature):
+    """Millisecond of minute encoded as value between [-0.5, 0.5]"""
+
+    def __call__(self, index: pd.DatetimeIndex) -> np.ndarray:
+        milliseconds = index.second * 1000 + index.microsecond // 1000
+        return milliseconds / 59999.0 - 0.5
+
+
 class SecondOfMinute(TimeFeature):
     """Minute of hour encoded as value between [-0.5, 0.5]"""
 
@@ -105,6 +113,15 @@ def time_features_from_frequency_str(freq_str: str) -> List[TimeFeature]:
             DayOfMonth,
             DayOfYear,
         ],
+        offsets.Milli: [
+            MillisecondOfMinute,
+            SecondOfMinute,
+            MinuteOfHour,
+            HourOfDay,
+            DayOfWeek,
+            DayOfMonth,
+            DayOfYear,
+        ],
     }
 
     offset = to_offset(freq_str)
@@ -126,6 +143,7 @@ def time_features_from_frequency_str(freq_str: str) -> List[TimeFeature]:
         T   - minutely
             alias: min
         S   - secondly
+        ms  - milliseconds
     """
     raise RuntimeError(supported_freq_msg)
 
