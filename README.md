@@ -17,6 +17,7 @@
 <div align="center">
 
 **[<a href="https://openreview.net/pdf?id=7oLshfEIC2">Paper Page</a>]**
+**[<a href="https://iclr.cc/virtual/2024/poster/19347">ICLR Video</a>]**
 **[<a href="https://medium.com/towards-data-science/timemixer-exploring-the-latest-model-in-time-series-forecasting-056d9c883f46">Medium Blog</a>]**
 
 **[<a href="https://mp.weixin.qq.com/s/d7fEnEpnyW5T8BN08XRi7g">中文解读1</a>]**
