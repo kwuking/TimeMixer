@@ -24,7 +24,6 @@
 **[<a href="https://mp.weixin.qq.com/s/MsJmWfXuqh_pTYlwve6O3Q">中文解读2</a>]**
 **[<a href="https://zhuanlan.zhihu.com/p/686772622">中文解读3</a>]**
 **[<a href="https://mp.weixin.qq.com/s/YZ7L1hImIt-jbRT2tizyQw">中文解读4</a>]**
-**[<a href="https://mp.weixin.qq.com/s/YZ7L1hImIt-jbRT2tizyQw">中文解读4</a>]**
 
 </div>
 
