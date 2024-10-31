@@ -46,6 +46,10 @@
 
 # Updates
 
+🚩 **News** (2024.10): **TimeMixer++** introduction in **[Chinese](https://mp.weixin.qq.com/s/l_MB11XoShV7vK3BjtEPog)** is now available！
+
+🚩 **News** (2024.10): We have newly released **[TimerMixer++](https://arxiv.org/abs/2410.16032)** as an upgraded version of TimeMixer. **TimeMixer++ is a time series pattern machine that employs multi-scale and multi-resolution pattern extraction to achieve 🏆state-of-the-art across 8 diverse analytical tasks!** 
+
 🚩 **News** (2024.07): TimeMixer has been included in **[NeuralForecast](https://github.com/Nixtla/neuralforecast)**. Special thanks to the contributor @[marcopeix](https://github.com/marcopeix) and @[JQGoh](https://github.com/JQGoh)!
 
 🚩 **News** (2024.07) TimeMixer has evolved into a **large model supporting comprehensive time series analysis, including long-term forecasting, short-term forecasting, anomaly detection, imputation, and classification**. In the future, we will further explore additional types of time series analysis tasks and strive to break through the limitations of current long-term forecasting to achieve efficient extreme-long-term time series forecasting.
