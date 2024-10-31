@@ -168,10 +168,23 @@ We compare the running memory and time against the latest state-of-the-art model
 </p>
 
 ## Further Reading
-1, [**Time-LLM: Time Series Forecasting by Reprogramming Large Language Models**](https://arxiv.org/abs/2310.01728), in *ICLR* 2024.
+1, [**TimeMixer++: A General Time Series Pattern Machine for Universal Predictive Analysis**](https://arxiv.org/abs/2410.16032), in *arXiv* 2024.
+
+**Authors**: Shiyu Wang*, Jiawei Li*, Xiaoming Shi, Zhou Ye, Baichuan Mo, Wenze Lin, Shengtong Ju, Zhixuan Chu, Ming Jin
+
+```bibtex
+@article{wang2024timemixer++,
+  title={TimeMixer++: A General Time Series Pattern Machine for Universal Predictive Analysis},
+  author={Wang, Shiyu and Li, Jiawei and Shi, Xiaoming and Ye, Zhou and Mo, Baichuan and Lin, Wenze and Ju, Shengtong and Chu, Zhixuan and Jin, Ming},
+  journal={arXiv preprint arXiv:2410.16032},
+  year={2024}
+}
+```
+
+2, [**Time-LLM: Time Series Forecasting by Reprogramming Large Language Models**](https://arxiv.org/abs/2310.01728), in *ICLR* 2024.
 [\[GitHub Repo\]](https://github.com/KimMeen/Time-LLM)
 
-**Authors**: Ming Jin, Shiyu Wang, Lintao Ma, Zhixuan Chu, James Y. Zhang, Xiaoming Shi, Pin-Yu Chen, Yuxuan Liang, Yuan-Fang Li, Shirui Pan, Qingsong Wen
+**Authors**: Ming Jin*, Shiyu Wang*, Lintao Ma, Zhixuan Chu, James Y. Zhang, Xiaoming Shi, Pin-Yu Chen, Yuxuan Liang, Yuan-Fang Li, Shirui Pan, Qingsong Wen
 
 ```bibtex
 @inproceedings{jin2023time,
@@ -182,10 +195,10 @@ We compare the running memory and time against the latest state-of-the-art model
 }
 ```
 
-2, [**iTransformer: Inverted Transformers Are Effective for Time Series Forecasting**](https://arxiv.org/abs/2310.06625), in *ICLR* 2024 Spotlight.
+3, [**iTransformer: Inverted Transformers Are Effective for Time Series Forecasting**](https://arxiv.org/abs/2310.06625), in *ICLR* 2024 Spotlight.
 [\[GitHub Repo\]](https://github.com/thuml/iTransformer)
 
-**Authors**: Yong Liu, Tengge Hu, Haoran Zhang, Haixu Wu, Shiyu Wang, Lintao Ma, Mingsheng Long
+**Authors**: Yong Liu, Tengge Hu, Haoran Zhang, Haixu Wu, Shiyu Wang*, Lintao Ma, Mingsheng Long
 
 ```bibtex
 @article{liu2023itransformer,
