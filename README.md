@@ -27,7 +27,7 @@
 
 </div>
 
-🌟🌟🌟Our latest research: "**TimeMixer++: A General Time Series Pattern Machine for Universal Predictive Analysis**", arXiv 2024. [\[paper\]](https://arxiv.org/abs/2410.16032)
+🌟🌟🌟Our latest research: "**TimeMixer++: A General Time Series Pattern Machine for Universal Predictive Analysis**", in arXiv 2024. [\[paper\]](https://arxiv.org/abs/2410.16032)
 
 ```
 @article{wang2024timemixer++,
