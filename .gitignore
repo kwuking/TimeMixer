@@ -1,0 +1,14 @@
+
+/.venv
+/checkpoints
+*.pyc
+dataset/.DS_Store
+dataset/electricity/.DS_Store
+/dataset
+result_long_term_forecast.txt
+/results
+/results_TimeMixer
+script_timings.txt
+/test_results
+ouput_metrics_label.txt
+/myenv

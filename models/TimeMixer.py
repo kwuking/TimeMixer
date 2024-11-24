@@ -5,6 +5,37 @@ from layers.Autoformer_EncDec import series_decomp
 from layers.Embed import DataEmbedding_wo_pos
 from layers.StandardNorm import Normalize
 
+class SpectralFilteringLayer(nn.Module):
+    """
+    Spectral filtering as a standalone layer.
+    """
+    def __init__(self, filter_type="gaussian", sigma=0.001):
+        super(SpectralFilteringLayer, self).__init__()
+        self.filter_type = filter_type
+        self.sigma = sigma
+
+    def spectral_filtering(self, xf):
+        """
+        Apply a spectral filter to the frequency domain representation.
+        """
+        n = xf.size(-1)
+        if self.filter_type == "hamming":
+            window = torch.hamming_window(n, periodic=True, dtype=xf.real.dtype, device=xf.device)
+            xf *= window
+        elif self.filter_type == "gaussian":
+            t = torch.linspace(-1.0, 1.0, n, dtype=xf.real.dtype, device=xf.device)
+            window = torch.exp(-0.5 * (t / self.sigma) ** 2)
+            xf *= window
+        return xf
+
+    def forward(self, x):
+        # Perform DFT
+        xf = torch.fft.rfft(x)
+        # Apply spectral filtering
+        xf = self.spectral_filtering(xf)
+        # Inverse DFT to reconstruct the time domain signal
+        filtered_x = torch.fft.irfft(xf, n=x.size(-1))
+        return filtered_x
 
 class DFT_series_decomp(nn.Module):
     """
@@ -126,6 +157,7 @@ class PastDecomposableMixing(nn.Module):
         self.dropout = nn.Dropout(configs.dropout)
         self.channel_independence = configs.channel_independence
 
+        # Decomposition method
         if configs.decomp_method == 'moving_avg':
             self.decompsition = series_decomp(configs.moving_avg)
         elif configs.decomp_method == "dft_decomp":
@@ -133,7 +165,12 @@ class PastDecomposableMixing(nn.Module):
         else:
             raise ValueError('decompsition is error')
 
-        if configs.channel_independence == 0:
+        # Spectral filtering layer
+        self.spectral_filtering_layer = SpectralFilteringLayer(
+            filter_type="gaussian", sigma=0.8
+        )
+
+        if not configs.channel_independence:
             self.cross_layer = nn.Sequential(
                 nn.Linear(in_features=configs.d_model, out_features=configs.d_ff),
                 nn.GELU(),
@@ -143,7 +180,7 @@ class PastDecomposableMixing(nn.Module):
         # Mixing season
         self.mixing_multi_scale_season = MultiScaleSeasonMixing(configs)
 
-        # Mxing trend
+        # Mixing trend
         self.mixing_multi_scale_trend = MultiScaleTrendMixing(configs)
 
         self.out_cross_layer = nn.Sequential(
@@ -163,20 +200,25 @@ class PastDecomposableMixing(nn.Module):
         trend_list = []
         for x in x_list:
             season, trend = self.decompsition(x)
-            if self.channel_independence == 0:
+
+            # Apply spectral filtering to season and trend
+            season = self.spectral_filtering_layer(season)
+            trend = self.spectral_filtering_layer(trend)
+
+            if not self.channel_independence:
                 season = self.cross_layer(season)
                 trend = self.cross_layer(trend)
+
             season_list.append(season.permute(0, 2, 1))
             trend_list.append(trend.permute(0, 2, 1))
 
-        # bottom-up season mixing
+        # Bottom-up season mixing
         out_season_list = self.mixing_multi_scale_season(season_list)
-        # top-down trend mixing
+        # Top-down trend mixing
         out_trend_list = self.mixing_multi_scale_trend(trend_list)
 
         out_list = []
-        for ori, out_season, out_trend, length in zip(x_list, out_season_list, out_trend_list,
-                                                      length_list):
+        for ori, out_season, out_trend, length in zip(x_list, out_season_list, out_trend_list, length_list):
             out = out_season + out_trend
             if self.channel_independence:
                 out = ori + self.out_cross_layer(out)
