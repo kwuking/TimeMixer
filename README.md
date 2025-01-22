@@ -29,7 +29,7 @@
 
 🌟🌟🌟Our latest research: "**TimeMixer++: A General Time Series Pattern Machine for Universal Predictive Analysis**", in arXiv 2024. [\[paper\]](https://arxiv.org/abs/2410.16032)
 
-```
+```bibtex
 @article{wang2024timemixer++,
   title={TimeMixer++: A General Time Series Pattern Machine for Universal Predictive Analysis},
   author={Wang, Shiyu and Li, Jiawei and Shi, Xiaoming and Ye, Zhou and Mo, Baichuan and Lin, Wenze and Ju, Shengtong and Chu, Zhixuan and Jin, Ming},
@@ -44,7 +44,7 @@
 > 
 > 🌟 If you find this resource helpful, please consider to star this repository and cite our research:
 
-```
+```bibtex
 @inproceedings{wang2023timemixer,
   title={TimeMixer: Decomposable Multiscale Mixing for Time Series Forecasting},
   author={Wang, Shiyu and Wu, Haixu and Shi, Xiaoming and Hu, Tengge and Luo, Huakun and Ma, Lintao and Zhang, James Y and ZHOU, JUN},
