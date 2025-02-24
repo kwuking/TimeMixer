@@ -69,7 +69,7 @@
 
 🚩 **News** (2024.05) TimeMixer currently **supports using future temporal features for prediction**. This feature has been well-received by the community members. You can now decide whether to enable this feature by using the parameter use_future_temporal_feature.
 
-🚩 **News** (2024.03) TimeMixer has been included in [[Time-Series-Library]](https://github.com/thuml/Time-Series-Library) and achieve the consistent 🏆**state-of-the-art** in **long-term time and short-term series** forecasting.
+🚩 **News** (2024.03) TimeMixer has been included in [[**Time-Series-Library**]](https://github.com/thuml/Time-Series-Library) and achieve the consistent 🏆**state-of-the-art** in **long-term time and short-term series forecasting** .
 
 🚩 **News** (2024.03) TimeMixer has added a time-series decomposition method based on DFT, as well as downsampling operation based on 1D convolution.
 
@@ -80,7 +80,7 @@
 
 🌟**Observation 1: History Extraction** 
 
-Given that seasonal and trend components exhibit significantly different characteristics in time series, and different scales of the time series reflect different properties, with seasonal characteristics being more pronounced at a fine-grained micro scale and trend characteristics being more pronounced at a coarse macro scale, it is therefore necessary to decouple seasonal and trend components at different scales.
+Given that seasonal and trend components exhibit significantly different characteristics in time series, and different scales of the time series reflect different properties, with seasonal characteristics being more pronounced at a fine-grained micro-scale and trend characteristics being more pronounced at a coarse macro scale, it is, therefore, necessary to decouple seasonal and trend components at different scales.
 
 <p align="center">
 <img src="./figures/motivation1.png"  alt="" align=center />
@@ -88,7 +88,7 @@ Given that seasonal and trend components exhibit significantly different charact
 
 🌟**Observation 2: Future Prediction** 
 
-Integrating forecasts from different scales to obtain the final prediction results, different scales exhibit complementary predictive capabilities.
+Different scales exhibit complementary predictive capabilities when integrating forecasts from different scales to obtain the final prediction results.
 
 <p align="center">
 <img src="./figures/motivation2.png"  alt="" align=center />
@@ -126,7 +126,7 @@ Note that **Future Multipredictor Mixing (FMM)** is an ensemble of multiple pred
 ## Get Started
 
 1. Install requirements. ```pip install -r requirements.txt```
-2. Download data. You can download the all datasets from [Google Driver](https://drive.google.com/u/0/uc?id=1NF7VEefXCmXuWNbnNe858WvQAkJ_7wuP&export=download), [Baidu Driver](https://pan.baidu.com/share/init?surl=r3KhGd0Q9PJIUZdfEYoymg&pwd=i9iy) or [Kaggle Datasets](https://www.kaggle.com/datasets/wentixiaogege/time-series-dataset). **All the datasets are well pre-processed** and can be used easily.
+2. Download data. You can download all datasets from [Google Driver](https://drive.google.com/u/0/uc?id=1NF7VEefXCmXuWNbnNe858WvQAkJ_7wuP&export=download), [Baidu Driver](https://pan.baidu.com/share/init?surl=r3KhGd0Q9PJIUZdfEYoymg&pwd=i9iy) or [Kaggle Datasets](https://www.kaggle.com/datasets/wentixiaogege/time-series-dataset). **All the datasets are well pre-processed** and can be used easily.
 3. Train the model. We provide the experiment scripts of all benchmarks under the folder `./scripts`. You can reproduce the experiment results by:
 
 ```bash
@@ -166,14 +166,14 @@ To ensure model comparison fairness, experiments were performed with standardize
 
 ## Model Abalations
 
-To verify the effectiveness of each component of TimeMixer, we provide detailed ablation study on every possible design in both Past-Decomposable-Mixing and Future-Multipredictor-Mixing blocks on all 18 experiment benchmarks （see our paper for full results 😊）.
+To verify the effectiveness of each component of TimeMixer, we provide the detailed ablation study on every possible design in both Past-Decomposable-Mixing and Future-Multipredictor-Mixing blocks on all 18 experiment benchmarks （see our paper for full results 😊）.
 
 <p align="center">
 <img src="./figures/ablation.png"  alt="" align=center />
 </p>
 
 ## Model Efficiency
-We compare the running memory and time against the latest state-of-the-art models under the training phase, where TimeMixer consistently demonstrates favorable efficiency, in terms of both GPU memory and running time, for various series lengths (ranging from 192 to 3072), in addition to the consistent state-of-the-art perfor- mances for both long-term and short-term forecasting tasks.
+We compare the running memory and time against the latest state-of-the-art models under the training phase, where TimeMixer consistently demonstrates favorable efficiency, in terms of both GPU memory and running time, for various series lengths (ranging from 192 to 3072), in addition to the consistent state-of-the-art performances for both long-term and short-term forecasting tasks.
 **It is noteworthy that TimeMixer, as a deep model, demonstrates results close to those of full-linear models in terms of efficiency. This makes TimeMixer promising in a wide range of scenarios that require high model efficiency.**
 
 <p align="center">
